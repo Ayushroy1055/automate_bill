@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Input from '../components/Input';
 import {Button} from '../components/Button';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 import axios from 'axios';
 
 const Main = () => {
@@ -15,12 +16,13 @@ const Main = () => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
   };
-
+  
   const handleSignupChange = (e) => {
     const { name, value } = e.target;
     setSignupData({ ...signupData, [name]: value });
   }; 
 
+  // const handleLoginSubmit = async (e) => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -34,7 +36,8 @@ const Main = () => {
     // }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', loginData);
+      const res = await api.post('/api/auth/login', loginData);
+
 
       console.log('Login success:', res.data);
 
@@ -48,9 +51,10 @@ const Main = () => {
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
-
 
   const handleSignupSubmit = (e) => {
     e.preventDefault();
